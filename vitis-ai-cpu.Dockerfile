@@ -1,4 +1,5 @@
 FROM ubuntu:18.04
+CACHEBUST=1
 ENV DEBIAN_FRONTEND=noninteractive
 SHELL ["/bin/bash", "-c"]
 ENV TZ=America/Denver
@@ -104,39 +105,44 @@ RUN apt-get install -y \
     opencl-clhpp-headers \
     opencl-headers \
     pocl-opencl-icd \
-    rpm \
-    && add-apt-repository -y ppa:ubuntu-toolchain-r/test \
+    rpm 
+RUN add-apt-repository -y ppa:ubuntu-toolchain-r/test \
     && apt-get install -y \
     gcc-8 \
     g++-8 \
     gcc-9 \
-    g++-9 \
-    && wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null \
+    g++-9 
+RUN pip3 install scikit-build
+#RUN pip3 install cmake
+RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /usr/share/keyrings/kitware-archive-keyring.gpg >/dev/null \
     && echo 'deb [signed-by=/usr/share/keyrings/kitware-archive-keyring.gpg] https://apt.kitware.com/ubuntu/ bionic main' | sudo tee /etc/apt/sources.list.d/kitware.list >/dev/null \
     && apt-get update -y \
     && apt-get install -y \
     cmake=3.16.0-0kitware1 \
     cmake-data=3.16.0-0kitware1 \
-    kitware-archive-keyring \
-    && apt-get install -y ffmpeg \
-    && cd /usr/src/gtest \
-    && mkdir -p build \
-    && cd build \
-    && cmake .. \
-    && make \
-    && make install
-
-RUN pip3 install \
-    Flask \
-    setuptools \
-    wheel
+    kitware-archive-keyring 
+RUN pip3 install ffmpeg-python
+#RUN apt-get install -y ffmpeg \
+#    && cd /usr/src/gtest \
+#    && mkdir -p build \
+#    && cd build \
+#    && cmake .. \
+#    && make \
+#    && make install
+RUN pip3 install setuptools 
+RUN pip3 install wheel
+#RUN pip3 install -U MarkupSafe==2.0.0
+#RUN pip3 install Flask 
+#    Flask \
+#    setuptools \
+#    wheel
 
 # Install XRT
-RUN wget --progress=dot:mega -O xrt.deb ${XRT_URL} \
-    && ls -lhd ./xrt.deb \
-    && apt-get update -y \
-    && apt-get install -y ./xrt.deb \
-    && rm -fr /tmp/*
+RUN wget --progress=dot:mega -O xrt.deb ${XRT_URL} 
+RUN ls -lhd ./xrt.deb 
+RUN apt-get update -y 
+RUN apt-get install -y ./xrt.deb 
+RUN rm -fr /tmp/*
 
 # Install XRM
 RUN wget --progress=dot:mega -O xrm.deb ${XRM_URL} \
@@ -272,7 +278,7 @@ RUN source ~/.bashrc \
 
 ENV GOSU_VERSION 1.12
 
-COPY dockerfiles/bashrc /etc/bash.bashrc
+COPY docker/dockerfiles/bashrc /etc/bash.bashrc
 RUN chmod a+rwx /etc/bash.bashrc
 RUN groupadd vitis-ai-group \
     && useradd --shell /bin/bash -c '' -m -g vitis-ai-group vitis-ai-user \
@@ -301,10 +307,10 @@ RUN groupadd vitis-ai-group \
     && mkdir -p ${VAI_ROOT}/scripts \
     && chmod 775 ${VAI_ROOT}/scripts
 
-COPY dockerfiles/host_cross_compiler_setup.sh ${VAI_ROOT}/scripts/
+COPY docker/dockerfiles/host_cross_compiler_setup.sh ${VAI_ROOT}/scripts/
 RUN chmod a+rx ${VAI_ROOT}/scripts/host_cross_compiler_setup.sh
 
-COPY dockerfiles/replace_pytorch.sh ${VAI_ROOT}/scripts/
+COPY docker/dockerfiles/replace_pytorch.sh ${VAI_ROOT}/scripts/
 RUN chmod a+rx ${VAI_ROOT}/scripts/replace_pytorch.sh
 
 # Set up Anaconda
@@ -320,8 +326,8 @@ RUN cd /tmp \
     && . /etc/profile.d/conda.sh \
     &&  conda clean -y --force-pkgs-dirs
 
-ADD --chown=vitis-ai-user:vitis-ai-group dockerfiles/cpu_conda/*.yml /scratch/
-ADD --chown=vitis-ai-user:vitis-ai-group dockerfiles/pip_requirements.txt /scratch/
+ADD --chown=vitis-ai-user:vitis-ai-group docker/dockerfiles/cpu_conda/*.yml /scratch/
+ADD --chown=vitis-ai-user:vitis-ai-group docker/dockerfiles/pip_requirements.txt /scratch/
 
 # Rebuild this layer every time
 ARG CACHEBUST=1
@@ -341,15 +347,15 @@ RUN if [[ ${VAI_CONDA_CHANNEL} =~ .*"tar.gz" ]]; then \
     && mamba install -c conda-forge conda-build \
     && python3 -m pip install --upgrade pip wheel setuptools \
     && conda config --env --append channels ${VAI_WEGO_CONDA_CHANNEL}/wegotf1 \
-    && mamba env create -f /scratch/vitis-ai-wego-tf1.yml \
+    #&& mamba env create -f /scratch/vitis-ai-wego-tf1.yml \
     && conda clean -y --force-pkgs-dirs \
     && rm -fr ~/.cache \
     && conda config --env --remove-key channels \
     && conda config --env --append channels ${VAI_WEGO_CONDA_CHANNEL}/wegotf2 \
-    && mamba env create -f /scratch/vitis-ai-wego-tf2.yml \
+    #&& mamba env create -f /scratch/vitis-ai-wego-tf2.yml \
     && conda config --env --remove-key channels \
     && conda config --env --append channels ${VAI_CONDA_CHANNEL} \
-    && conda activate vitis-ai-wego-tf2 \
+    #&& conda activate vitis-ai-wego-tf2 \
     && mamba install --no-update-deps -y vai_q_tensorflow2  \
     && pip install --ignore-installed keras==2.8 protobuf==3.11 \
     && conda clean -y --force-pkgs-dirs \
@@ -360,11 +366,11 @@ RUN if [[ ${VAI_CONDA_CHANNEL} =~ .*"tar.gz" ]]; then \
     && conda activate vitis-ai-pytorch \
     && conda config --show channels \
     && pip install graphviz==0.19.1 \
-    && mamba env create -f /scratch/vitis-ai-tensorflow.yml \
-    && conda activate vitis-ai-tensorflow \
+    #&& mamba env create -f /scratch/vitis-ai-tensorflow.yml \
+    #    && conda activate vitis-ai-tensorflow \
     && pip install -r /scratch/pip_requirements.txt \
-    && mamba env create -f /scratch/vitis-ai-tensorflow2.yml \
-    && conda activate vitis-ai-tensorflow2 \
+    #&& mamba env create -f /scratch/vitis-ai-tensorflow2.yml \
+    #    && conda activate vitis-ai-tensorflow2 \
     && mamba install --no-update-deps -y vai_q_tensorflow2 pydot pyyaml jupyter ipywidgets \
     dill progressbar2 pytest scikit-learn pandas matplotlib \
     pillow -c conda-forge -c defaults \
@@ -425,4 +431,4 @@ RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 90 \
     --slave /usr/bin/g++ g++ /usr/bin/g++-7 \
     --slave /usr/bin/gcov gcov /usr/bin/gcov-7
 
-ADD dockerfiles/banner.sh /etc/
+#ADD dockerfiles/banner.sh /etc/
