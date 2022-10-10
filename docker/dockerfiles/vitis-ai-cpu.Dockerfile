@@ -426,3 +426,14 @@ RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 90 \
     --slave /usr/bin/gcov gcov /usr/bin/gcov-7
 
 #ADD dockerfiles/banner.sh /etc/
+
+# protobuf 3.4.0
+# RUN cd /tmp; wget --progress=dot:mega https://codeload.github.com/google/protobuf/zip/v3.4.0 \
+#     && unzip v3.4.0 \
+#     && cd protobuf-3.4.0 \
+#     && ./autogen.sh \
+#     && ./configure \
+#     && make -j \
+#     && make install \
+#     && ldconfig \
+#     && rm -fr /tmp/*

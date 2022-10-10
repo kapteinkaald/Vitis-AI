@@ -13,26 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-sed -n '1, 5p' ./dockerfiles/PROMPT.txt
-sed -n '5, 15p' ./dockerfiles/PROMPT.txt
-sed -n '15, 28p' ./dockerfiles/PROMPT.txt
-sed -n '28, 61p' ./dockerfiles/PROMPT.txt
-sed -n '62, 224p' ./dockerfiles/PROMPT.txt
-sed -n '224, 308p' ./dockerfiles/PROMPT.txt
-read -n 1 -s -r -p "Press any key to continue..." key
 
-confirm() {
-  echo -en "\n\nDo you agree to the terms and wish to proceed [y/n]? "
-  read REPLY
-  case $REPLY in
-    [Yy]) ;;
-    [Nn]) exit 0 ;;
-    *) confirm ;;
-  esac
-    REPLY=''
-}
-
-confirm
 
 DOCKER_REPO="${DOCKER_REPO:-xilinx/}"
 VERSION="${VERSION:-`cat dockerfiles/VERSION.txt`}"
