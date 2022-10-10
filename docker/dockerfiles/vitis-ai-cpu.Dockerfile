@@ -158,15 +158,15 @@ RUN cd /tmp \
     && rm -fr /tmp/*
 
 # protobuf 3.4.0
-RUN cd /tmp; wget --progress=dot:mega https://codeload.github.com/google/protobuf/zip/v3.4.0 \
-    && unzip v3.4.0 \
-    && cd protobuf-3.4.0 \
-    && ./autogen.sh \
-    && ./configure \
-    && make -j \
-    && make install \
-    && ldconfig \
-    && rm -fr /tmp/*
+# RUN cd /tmp; wget --progress=dot:mega https://codeload.github.com/google/protobuf/zip/v3.4.0 \
+#     && unzip v3.4.0 \
+#     && cd protobuf-3.4.0 \
+#     && ./autogen.sh \
+#     && ./configure \
+#     && make -j \
+#     && make install \
+#     && ldconfig \
+#     && rm -fr /tmp/*
 
 # opencv 3.4.1
 RUN add-apt-repository ppa:timsc/opencv-3.4 \
@@ -324,7 +324,7 @@ ADD --chown=vitis-ai-user:vitis-ai-group dockerfiles/cpu_conda/*.yml /scratch/
 ADD --chown=vitis-ai-user:vitis-ai-group dockerfiles/pip_requirements.txt /scratch/
 
 # Rebuild this layer every time
-ARG CACHEBUST=1
+ARG CACHEBUST=0
 
 # Create conda envs
 RUN if [[ ${VAI_CONDA_CHANNEL} =~ .*"tar.gz" ]]; then \
@@ -397,7 +397,7 @@ RUN rm -f /opt/vitis_ai/conda/envs/vitis-ai-tensorflow/etc/conda/activate.d/acti
 RUN chmod -R 777 /opt/vitis_ai/conda/envs/vitis-ai-pytorch/lib/python3.7/site-packages
 
 # Rebuild this layer every time
-ARG CACHEBUST=1
+ARG CACHEBUST=0
 RUN cd /tmp \
     && wget -O libunilog.deb https://www.xilinx.com/bin/public/openDownload?filename=libunilog_2.5.0-r90_amd64.deb \
     && wget -O libtarget-factory.deb https://www.xilinx.com/bin/public/openDownload?filename=libtarget-factory_2.5.0-r100_amd64.deb \
@@ -425,4 +425,4 @@ RUN update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 90 \
     --slave /usr/bin/g++ g++ /usr/bin/g++-7 \
     --slave /usr/bin/gcov gcov /usr/bin/gcov-7
 
-ADD dockerfiles/banner.sh /etc/
+#ADD dockerfiles/banner.sh /etc/
