@@ -21,7 +21,9 @@ VERSION=latest
 
 CPU_IMAGE_TAG=${DOCKER_REPO}${BRAND}-cpu:${VERSION}
 GPU_IMAGE_TAG=${DOCKER_REPO}${BRAND}-gpu:${VERSION}
-IMAGE_NAME="${1:-$CPU_IMAGE_TAG}"
+# IMAGE_NAME="${1:-$CPU_IMAGE_TAG}"
+IMAGE_NAME=vake/vitis-ai
+container_name=remis
 DEFAULT_COMMAND="bash"
 
 if [[ $# -gt 0 ]]; then
@@ -63,10 +65,11 @@ docker_run_params=$(cat <<-END
     -w /workspace \
     --rm \
     --network=host \
+    --platform=linux/x86_64
     ${DETACHED} \
     ${RUN_MODE} \
     $IMAGE_NAME \
-    $DEFAULT_COMMAND
+    $DEFAULT_COMMAND 
 END
 )
 
@@ -81,6 +84,7 @@ if [[ $IMAGE_NAME == *"gpu"* ]]; then
     $docker_run_params
 else
   docker run \
+  --name $container_name \
     $docker_devices \
-    $docker_run_params
+    $docker_run_params 
 fi

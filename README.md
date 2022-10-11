@@ -1,3 +1,9 @@
+# Vake
+
+Use docker_build_cpu_pytorch.sh to build from minimal vitis-ai cpu.Dockerfile. This reduces image size from ~20GB to <7GB. 
+
+
+
 <div align="center">
   <img width="100%" height="100%" src="docs/images/Vitis-AI.png">
 </div>
