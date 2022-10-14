@@ -21,8 +21,8 @@ VERSION=latest
 
 CPU_IMAGE_TAG=${DOCKER_REPO}${BRAND}-cpu:${VERSION}
 GPU_IMAGE_TAG=${DOCKER_REPO}${BRAND}-gpu:${VERSION}
-# IMAGE_NAME="${1:-$CPU_IMAGE_TAG}"
-IMAGE_NAME=vake/vitis-ai
+IMAGE_NAME="${1:-$CPU_IMAGE_TAG}"
+#IMAGE_NAME=vake/vitis-ai
 container_name=remis
 DEFAULT_COMMAND="bash"
 

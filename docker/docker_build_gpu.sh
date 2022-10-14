@@ -33,7 +33,7 @@ IMAGE_LATEST_TAG=${DOCKER_REPO}${BRAND}:latest
 IMAGE_MINOR_TAG=${DOCKER_REPO}${BRAND}:2.5.0
 IMAGE_MAJOR_TAG=${DOCKER_REPO}${BRAND}:2.5
 
-docker build --network=host --build-arg XRT_URL=${XRT_URL} --build-arg XRM_URL=${XRM_URL} --build-arg PETALINUX_URL=${PETALINUX_URL} --build-arg VAI_CONDA_CHANNEL=${VAI_CONDA_CHANNEL} --build-arg VERSION=${VERSION} --build-arg GIT_HASH=`git rev-parse --short HEAD` --build-arg CACHEBUST="$(date +%s)" --build-arg DATE="$(date -I)" -f ${DOCKERFILE} -t ${IMAGE_TAG} ./
+docker build  --platform linux/x86_64 --network=host --build-arg XRT_URL=${XRT_URL} --build-arg XRM_URL=${XRM_URL} --build-arg PETALINUX_URL=${PETALINUX_URL} --build-arg VAI_CONDA_CHANNEL=${VAI_CONDA_CHANNEL} --build-arg VERSION=${VERSION} --build-arg GIT_HASH=`git rev-parse --short HEAD` --build-arg CACHEBUST="$(date +%s)" --build-arg DATE="$(date -I)" -f ${DOCKERFILE} -t ${IMAGE_TAG} ./
 docker tag ${IMAGE_TAG} ${IMAGE_MINOR_TAG}
 docker tag ${IMAGE_TAG} ${IMAGE_MAJOR_TAG}
 docker tag ${IMAGE_TAG} ${IMAGE_LATEST_TAG}
