@@ -17,7 +17,7 @@
 
 DOCKER_REPO="${DOCKER_REPO:-xilinx/}"
 VERSION="${VERSION:-`cat dockerfiles/VERSION.txt`}"
-DOCKERFILE="${DOCKERFILE:-dockerfiles/vitis-ai-gpu.Dockerfile}"
+DOCKERFILE="${DOCKERFILE:-dockerfiles/vitis-ai-pytorch-gpu.Dockerfile}"
 XRT_URL="${XRT_URL:-https://www.xilinx.com/bin/public/openDownload?filename=xrt_202120.2.12.427_18.04-amd64-xrt.deb}"
 XRM_URL="${XRM_URL:-https://www.xilinx.com/bin/public/openDownload?filename=xrm_202120.1.3.29_18.04-x86_64.deb}"
 PETALINUX_URL="${PETALINUX_URL:-https://www.xilinx.com/bin/public/openDownload?filename=sdk-2022.1.0.0.sh}"
