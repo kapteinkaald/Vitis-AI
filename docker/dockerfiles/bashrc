@@ -41,4 +41,4 @@ if [ -f /tmp/.Xauthority ]; then
 fi
 export PS1="\[\e[91m\]Vitis-AI\[\e[m\] \w > "
 
-source /etc/banner.sh
+#source /etc/banner.sh

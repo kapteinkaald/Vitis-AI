@@ -17,7 +17,7 @@
 
 DOCKER_REPO="${DOCKER_REPO:-xilinx/}"
 VERSION="${VERSION:-`cat dockerfiles/VERSION.txt`}"
-DOCKERFILE="${DOCKERFILE:-dockerfiles/vitis-ai-cpu.Dockerfile}"
+DOCKERFILE="${DOCKERFILE:-dockerfiles/cpu.Dockerfile}"
 XRT_URL="${XRT_URL:-https://www.xilinx.com/bin/public/openDownload?filename=xrt_202120.2.12.427_18.04-amd64-xrt.deb}"
 XRM_URL="${XRM_URL:-https://www.xilinx.com/bin/public/openDownload?filename=xrm_202120.1.3.29_18.04-x86_64.deb}"
 PETALINUX_URL="${PETALINUX_URL:-https://www.xilinx.com/bin/public/openDownload?filename=sdk-2022.1.0.0.sh}"
@@ -29,7 +29,7 @@ DATE="$(date)"
 
 # Final Build Image Tag
 #IMAGE_TAG=${DOCKER_REPO}${BRAND}:${VERSION}
-IMAGE_TAG=vake-vitis-ai
+IMAGE_TAG=vake-vitis-ai-pytorch
 IMAGE_LATEST_TAG=${DOCKER_REPO}${BRAND}:latest
 IMAGE_MINOR_TAG=${DOCKER_REPO}${BRAND}:2.5.0
 IMAGE_MAJOR_TAG=${DOCKER_REPO}${BRAND}:2.5

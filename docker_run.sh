@@ -1,36 +1,7 @@
 #!/bin/bash
 # Copyright 2022 Xilinx Inc.
 
-sed -n '1, 5p' ./docker/dockerfiles/PROMPT.txt
-read -n 1 -s -r -p "Press any key to continue..." key
 
-sed -n '5, 15p' ./docker/dockerfiles/PROMPT.txt
-read -n 1 -s -r -p "Press any key to continue..." key
-
-sed -n '15, 28p' ./docker/dockerfiles/PROMPT.txt
-read -n 1 -s -r -p "Press any key to continue..." key
-
-sed -n '28, 61p' ./docker/dockerfiles/PROMPT.txt
-read -n 1 -s -r -p "Press any key to continue..." key
-
-sed -n '62, 224p' ./docker/dockerfiles/PROMPT.txt
-read -n 1 -s -r -p "Press any key to continue..." key
-
-sed -n '224, 308p' ./docker/dockerfiles/PROMPT.txt
-read -n 1 -s -r -p "Press any key to continue..." key
-
-confirm() {
-  echo -en "\n\nDo you agree to the terms and wish to proceed [y/n]? "
-  read REPLY
-  case $REPLY in
-    [Yy]) ;;
-    [Nn]) exit 0 ;;
-    *) confirm ;;
-  esac
-    REPLY=''
-}
-
-confirm
 
 
 if [[ "$1" == "-h" || "$1" == "--help" ]]; then
@@ -51,6 +22,8 @@ VERSION=latest
 CPU_IMAGE_TAG=${DOCKER_REPO}${BRAND}-cpu:${VERSION}
 GPU_IMAGE_TAG=${DOCKER_REPO}${BRAND}-gpu:${VERSION}
 IMAGE_NAME="${1:-$CPU_IMAGE_TAG}"
+#IMAGE_NAME=vake/vitis-ai
+container_name=remis
 DEFAULT_COMMAND="bash"
 
 if [[ $# -gt 0 ]]; then
@@ -92,13 +65,16 @@ docker_run_params=$(cat <<-END
     -w /workspace \
     --rm \
     --network=host \
+    --platform=linux/x86_64
     ${DETACHED} \
     ${RUN_MODE} \
     $IMAGE_NAME \
-    $DEFAULT_COMMAND
+    $DEFAULT_COMMAND 
 END
 )
 
+echo $docker_run_params
+echo  $docker_devices 
 ##############################
 
 if [[ $IMAGE_NAME == *"gpu"* ]]; then
@@ -108,6 +84,7 @@ if [[ $IMAGE_NAME == *"gpu"* ]]; then
     $docker_run_params
 else
   docker run \
+  --name $container_name \
     $docker_devices \
-    $docker_run_params
+    $docker_run_params 
 fi

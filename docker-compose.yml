@@ -1,0 +1,18 @@
+version: '1'
+services:
+  vake-vitis-ai:
+    build: 
+      dockerfile: docker/dockerfiles/vitis-ai-cpu.Dockerfile 
+    #image: xilinx/vitis-ai-cpu:latest
+    network_mode: "host"
+    stdin_open: true # docker run -i
+    tty: true # docker run -t
+    env_file: .env
+    volumes: 
+      - /dev/shm:/dev/shm
+      - /opt/xilinx/dsa:/opt/xilinx/dsa 
+      - /opt/xilinx/overlaybins:/opt/xilinx/overlaybins
+      - /Users/sindre/Vake/Vitis-AI:/vitis_ai_home 
+      - /Users/sindre/Vake/Vitis-AI:/workspace 
+    working_dir: /workspace
+
